@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet"> <!-- Added font link -->
+    <link href="https://fonts.googleapis.com/css2?family=Jaro:opsz@6..72&display=swap" rel="stylesheet">
+    <link href="./main.css" rel="stylesheet" type="text/css">
+    
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "../../build/three.module.js",
+          "three/addons/": "../../examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="./main.js"></script>
+</head>
+<body>
+    <h1>TUR VIRTUAL AL FACULTATII DE MATEMATICA SI INFORMATICA</h1>
+
+    <div id="container">
+        <!-- Left Sidebar -->
+        <div id="sidebar">
+            <button class="button" id="button">Corpul vechi</button>
+            <button class="button" id="button2">Anexa AULA</button>
+            <button class="button" id="button3">Camin pescarie</button>
+            <button class="button" id="button4">Camine Bvd. Mamaia</button>
+            <button class="button" id="button5">Interior</button>
+            <button class="zoombutton" id="btnZoom" style="display: none;">Zoom In</button>
+            <button class="zoombutton" id="btnZoomOut" style="display: none;">Zoom Out</button>
+            <button class="zoombutton" id="infoButton" style="display: none;">Ascunde informatiile</button>
+        </div>
+        
+        <!-- Scene Container -->
+        <div id="scene-container">
+            <!-- Three.js scene will be rendered here -->
+        </div>
+        
+        <!-- Right Sidebar (hidden initially) -->
+        <div id="sidebar-right">
+            <!-- Content for right sidebar goes here -->
+        </div>
+    </div>
+    <div class="overlay" id="overlay">
+      <!-- Pop-up message -->
+      <div class="popup">
+        <span class="close" onclick="closePopup()">&times;</span>
+        <h2>Bine ati venit!</h2>
+        <p>Instructiuni pentru utilizarea turului virtual:</p>
+        <ul>
+          <li>Navigati pagina utilizand meniul din stanga.</li>
+          <li>Tineti apasat click stanga pentru a roti modelele, click dreapta pentru a muta modelele si scroll pentru a face zoom.</li>
+          <li>Faceti dublu-click pentru a afisa informatii despre modelul respectiv.</li>
+        </ul> 
+      </div>
+    </div>
+  
+    <script>
+      // Function to show the pop-up message
+      function showPopup() {
+        document.getElementById('overlay').style.display = 'block';
+      }
+  
+      // Function to close the pop-up message
+      function closePopup() {
+        document.getElementById('overlay').style.display = 'none';
+      }
+  
+      // Show the pop-up message when the page is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+        showPopup();
+      });
+    </script>
+</body>
+</html>
+
+

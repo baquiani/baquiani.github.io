@@ -1,32 +1,102 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <title>Vizualizare 3D</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Starting Page</title>
+  <style>
+    
+    body {
+      background: linear-gradient(0deg, #396ac6 18%, #080808 100%);
+      font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+      background-color: #f0f0f0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
 
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta charset="UTF-8" />
+    .container {
+      text-align: center;
+    }
 
-  <link rel="icon" href="https://discoverthreejs.com/favicon.ico" type="image/x-icon">
+    h1 {
+      color: white;
+      margin-bottom: 20px;
+      animation: myAnim 2s ease 0s 1 normal forwards;
+    }
 
-  <link href="./main.css" rel="stylesheet" type="text/css">
-  <script type="importmap">
-    {
-        "imports": {
-            "three": "../../build/three.module.js",
-            "three/addons/": "../../examples/jsm/"
-        }
-    }</script>
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
 
-  <script type="module" src="./main.js"></script>
+    button:hover {
+      background-color: #45a049;
+    }
+  @keyframes myAnim {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 0;
+		transform: translateX(-250px);
+	}
+
+	38% {
+		animation-timing-function: ease-out;
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	55% {
+		animation-timing-function: ease-in;
+		transform: translateX(-68px);
+	}
+
+	72% {
+		animation-timing-function: ease-out;
+		transform: translateX(0);
+	}
+
+	81% {
+		animation-timing-function: ease-in;
+		transform: translateX(-28px);
+	}
+
+	90% {
+		animation-timing-function: ease-out;
+		transform: translateX(0);
+	}
+
+	95% {
+		animation-timing-function: ease-in;
+		transform: translateX(-8px);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		transform: translateX(0);
+	}
+}
+  </style>
 </head>
-
 <body>
-  <h1>Vizualizare 3D</h1>
-
-  <div id="scene-container">
-    <!-- Our <canvas> will be inserted here -->
+  <div class="container">
+    <h1>Tur virtual interactiv al Facultatii de Matematica si Informatica</h1>
+    <button onclick="goToIndexPage()">Acceseaza</button>
   </div>
-</body>
 
+  <script>
+    function goToIndexPage() {
+      window.location.href = "tour.html";
+    }
+  </script>
+</body>
 </html>

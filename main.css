@@ -83,10 +83,10 @@ canvas {
   display: block;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.514);
-  max-width: 100%; /* Ensure canvas doesn't overflow horizontally */
-  max-height: calc(100vh - 100px); /* Ensure canvas fits vertically */
-  width: 100%;
+  width: 100%; /* Ensure canvas takes full width */
   height: auto; /* Maintain aspect ratio */
+  max-width: 100%; /* Ensure canvas doesn't overflow horizontally */
+  max-height: 100%; /* Ensure canvas doesn't overflow vertically */
 }
 
 #output {

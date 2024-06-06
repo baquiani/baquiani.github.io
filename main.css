@@ -19,57 +19,35 @@ h1 {
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Increased shadow */
 }
 
-#menu-button {
-  display: none; /* Hide by default */
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 24px;
-  background-color: #1e90ff;
-  color: #fff;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  z-index: 1001; /* Ensure it's above other elements */
-}
-
 #container {
   display: flex;
-  flex-direction: column; /* Change to column for mobile by default */
   height: calc(100% - 60px); /* Adjust for header height */
 }
 
 #sidebar {
-  width: 100%; /* Full width on small screens */
+  width: 150px;
   background: linear-gradient(0deg, #4b97b4 2%, #0000a0 100%);
   color: #fff;
   padding: 20px;
   box-sizing: border-box;
-  transition: transform 0.3s ease;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: -100%; /* Hide sidebar off-screen */
-  z-index: 1000; /* Ensure it's above other elements */
+  transition: width 1s ease 0s;
 }
-#sidebar.open {
-  transform: translateX(100%); /* Show sidebar */
+#sidebar:hover{
+  width:250px;
 }
-
 #sidebar-right {
-  width: 100%; /* Full width on small screens */
+  width: 250px;
   background-color: #333;
   color: #fff;
   padding: 20px;
   box-sizing: border-box;
   display: none;
-  overflow-y: auto; /* Enable vertical scrollbar */
+  overflow-y: scroll;
   transition: width 1s ease 0s;
 }
-#sidebar-right:hover {
-  width: 100%; /* Keep full width on hover */
+#sidebar-right:hover{
+  width:450px;
 }
-
 .button, .zoombutton {
   display: block;
   width: 100%;
@@ -95,17 +73,16 @@ h1 {
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
-  overflow: auto; /* Ensure container is scrollable if content overflows */
 }
 
 canvas {
   display: block;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.514);
-  width: 100%; /* Ensure canvas takes full width */
-  height: auto; /* Maintain aspect ratio */
-  max-width: 100%; /* Ensure canvas doesn't overflow horizontally */
-  max-height: 100%; /* Ensure canvas doesn't overflow vertically */
+  max-width: calc(100vw - 620px); /* Adjust for sidebar width */
+  max-height: calc(100vh - 80px); /* Adjust for header height */
+  width: 100%;
+  height: 100%;
 }
 
 #output {
@@ -121,7 +98,7 @@ canvas {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-  z-index: 999; /* Ensure it's above other elements */
+  z-index: 1000; /* Ensure it's above other elements */
 }
 
 /* Styles for the pop-up message */
@@ -144,55 +121,4 @@ canvas {
   right: 10px;
   cursor: pointer;
   color: #555;
-}
-
-/* Responsive adjustments */
-@media (min-width: 600px) {
-  #container {
-    flex-direction: row; /* Sidebars beside content for tablets and up */
-  }
-
-  #sidebar, #sidebar-right {
-    width: 150px; /* Initial width for sidebars on larger screens */
-  }
-  #sidebar {
-    position: static;
-    transform: none;
-  }
-  #sidebar:hover {
-    width: 250px; /* Expanded width on hover for larger screens */
-  }
-  #sidebar-right:hover {
-    width: 250px; /* Expanded width on hover for larger screens */
-  }
-
-  #menu-button {
-    display: none; /* Hide the menu button on larger screens */
-  }
-
-  canvas {
-    max-width: calc(100vw - 300px); /* Adjust for sidebar width */
-    max-height: calc(100vh - 80px); /* Adjust for header height */
-  }
-}
-
-@media (min-width: 900px) {
-  #sidebar-right {
-    display: block; /* Show the right sidebar on larger screens */
-  }
-
-  canvas {
-    max-width: calc(100vw - 620px); /* Adjust for both sidebars */
-  }
-}
-
-/* Show the menu button on smaller screens */
-@media (max-width: 599px) {
-  #menu-button {
-    display: block;
-  }
-
-  .overlay {
-    display: block; /* Show the overlay when sidebar is open */
-  }
 }

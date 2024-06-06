@@ -21,32 +21,36 @@ h1 {
 
 #container {
   display: flex;
+  flex-direction: column; /* Change to column for mobile by default */
   height: calc(100% - 60px); /* Adjust for header height */
 }
 
 #sidebar {
-  width: 150px;
+  width: 100%; /* Full width on small screens */
   background: linear-gradient(0deg, #4b97b4 2%, #0000a0 100%);
   color: #fff;
   padding: 20px;
   box-sizing: border-box;
   transition: width 1s ease 0s;
 }
-#sidebar:hover{
-  width:250px;
+#sidebar:hover {
+  width: 100%; /* Keep full width on hover */
 }
+
 #sidebar-right {
-  width: 250px;
+  width: 100%; /* Full width on small screens */
   background-color: #333;
   color: #fff;
   padding: 20px;
   box-sizing: border-box;
-  display: none;
+  overflow-y: auto;
+  display: hidden;
   transition: width 1s ease 0s;
 }
-#sidebar-right:hover{
-  width:450px;
+#sidebar-right:hover {
+  width: 100%; /* Keep full width on hover */
 }
+
 .button, .zoombutton {
   display: block;
   width: 100%;
@@ -78,7 +82,7 @@ canvas {
   display: block;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.514);
-  max-width: calc(100vw - 620px); /* Adjust for sidebar width */
+  max-width: calc(100vw - 40px); /* Adjust for sidebar width */
   max-height: calc(100vh - 80px); /* Adjust for header height */
   width: 100%;
   height: 100%;
@@ -120,4 +124,36 @@ canvas {
   right: 10px;
   cursor: pointer;
   color: #555;
+}
+
+/* Responsive adjustments */
+@media (min-width: 600px) {
+  #container {
+    flex-direction: row; /* Sidebars beside content for tablets and up */
+  }
+
+  #sidebar, #sidebar-right {
+    width: 150px; /* Initial width for sidebars on larger screens */
+  }
+  #sidebar:hover {
+    width: 250px; /* Expanded width on hover for larger screens */
+  }
+  #sidebar-right:hover {
+    width: 250px; /* Expanded width on hover for larger screens */
+  }
+
+  canvas {
+    max-width: calc(100vw - 300px); /* Adjust for sidebar width */
+    max-height: calc(100vh - 80px); /* Adjust for header height */
+  }
+}
+
+@media (min-width: 900px) {
+  #sidebar-right {
+    display: block; /* Show the right sidebar on larger screens */
+  }
+
+  canvas {
+    max-width: calc(100vw - 620px); /* Adjust for both sidebars */
+  }
 }

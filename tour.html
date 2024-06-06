@@ -20,7 +20,7 @@
 </head>
 <body>
     <h1>TUR VIRTUAL AL FACULTATII DE MATEMATICA SI INFORMATICA</h1>
-
+    <div id="menu-button" class="menu-button">☰ Menu</div>
     <div id="container">
         <!-- Left Sidebar -->
         <div id="sidebar">
@@ -73,6 +73,25 @@
       document.addEventListener('DOMContentLoaded', function() {
         showPopup();
       });
+    </script>
+    <script>
+      // script.js
+document.addEventListener('DOMContentLoaded', () => {
+  const menuButton = document.getElementById('menu-button');
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+
+  menuButton.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.style.display = sidebar.classList.contains('open') ? 'block' : 'none';
+  });
+
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.style.display = 'none';
+  });
+});
+
     </script>
 </body>
 </html>

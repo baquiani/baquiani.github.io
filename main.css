@@ -43,8 +43,8 @@ h1 {
   color: #fff;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto;
-  display: hidden;
+  display: none;
+  overflow-y: auto; /* Enable vertical scrollbar */
   transition: width 1s ease 0s;
 }
 #sidebar-right:hover {
@@ -76,16 +76,17 @@ h1 {
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
+  overflow: auto; /* Ensure container is scrollable if content overflows */
 }
 
 canvas {
   display: block;
   border-radius: 10px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.514);
-  max-width: calc(100vw - 40px); /* Adjust for sidebar width */
-  max-height: calc(100vh - 80px); /* Adjust for header height */
+  max-width: 100%; /* Ensure canvas doesn't overflow horizontally */
+  max-height: calc(100vh - 100px); /* Ensure canvas fits vertically */
   width: 100%;
-  height: 100%;
+  height: auto; /* Maintain aspect ratio */
 }
 
 #output {

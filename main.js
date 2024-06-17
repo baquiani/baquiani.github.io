@@ -22,19 +22,20 @@ import { MeshBasicMaterial } from 'three';
 const container = document.querySelector('#scene-container');
 const container2 = document.querySelector('#scene-container');
 
-var cameraMateinfo, sceneMateinfo, renderer,sceneAula,camera2,renderer2,scenePescarie,sceneCamin,cameraAula,cameraPescarie,cameraCamin,sceneInterior,cameraInterior;
+var cameraMateinfo, sceneMateinfo, renderer,sceneAula,camera2,renderer2,scenePescarie,sceneCamin,cameraAula,cameraPescarie,cameraCamin,sceneInteriorParter,sceneInteriorEtaj,cameraInteriorParter,cameraInteriorEtaj;
 var geometry1, geometry2, geometry3, material;
 var mesh1, mesh2, mesh3;
 var position3;
 var land,landMesh;
-var controls,controls2,controls3,controls4,controls5;
-var boolMateinfo,boolAula,boolPescarie,boolCamin,boolInterior;
+var controls,controls2,controls3,controls4,controls5,controls6;
+var boolMateinfo,boolAula,boolPescarie,boolCamin,boolInteriorParter,boolInteriorEtaj;
 var modelMateinfo,modelAula,modelPescarie,modelCamin;
 const objectsInScene1 = []
 const objectsInScene2 = []
 const objectsInScene3 = []
 const objectsInScene4 = []
 const objectsInScene5 = []
+const objectsInScene6 = []
 var currentScene, currentCamera;
 
 init();
@@ -56,20 +57,22 @@ function createLights() {
 
 function init() {
     // create a Scene with background color
+
+    const textureb = new TextureLoader().load("../../models/images/background.jpg")
     sceneMateinfo = new Scene();
-    sceneMateinfo.background = new Color('pink');
+    sceneMateinfo.background = textureb;
 
     scenePescarie = new Scene();
-    scenePescarie.background = new Color('pink');
+    scenePescarie.background = textureb;
 
     sceneCamin = new Scene();
-    sceneCamin.background = new Color('pink');
+    sceneCamin.background = textureb;
 
     sceneAula = new Scene();
-    sceneAula.background = new Color('pink');
+    sceneAula.background = textureb;
 
-    sceneInterior = new Scene();
-    
+    sceneInteriorParter = new Scene();
+    sceneInteriorEtaj = new Scene();
 
     currentScene = new Scene();
     currentCamera = new PerspectiveCamera();
@@ -80,11 +83,12 @@ function init() {
     const near = 0.1; // the near clipping plane
     const far = 10000; // the far clipping plane
     
-    cameraMateinfo = new PerspectiveCamera(fov, aspect, near, far);
-    cameraPescarie = new PerspectiveCamera(fov,aspect,near,far);
-    cameraAula = new PerspectiveCamera(fov,aspect,near,far);
-    cameraCamin = new PerspectiveCamera(fov,aspect,near,far);
-    cameraInterior = new PerspectiveCamera(fov,aspect,near,far);
+    cameraMateinfo = new PerspectiveCamera(30, aspect, near, far);
+    cameraPescarie = new PerspectiveCamera(30,aspect,near,far);
+    cameraAula = new PerspectiveCamera(30,aspect,near,far);
+    cameraCamin = new PerspectiveCamera(30,aspect,near,far);
+    cameraInteriorParter = new PerspectiveCamera(80,aspect,near,far);
+    cameraInteriorEtaj = new PerspectiveCamera(80,aspect,near,far);
     // every object is initially created at ( 0, 0, 0 )
     // move the camera back so we can view the scene
     // camera is watching towards (0,0,0) along negative Oz axis
@@ -92,7 +96,9 @@ function init() {
     cameraPescarie.position.set(0,0,1);
     cameraAula.position.set(50.96652488086836,13.450860132495091,-10.22992388460321);
     cameraCamin.position.set(4000,1000,4000);
-    cameraInterior.position.set(1,1,1);
+    cameraInteriorParter.position.set(1,1,2);
+    cameraInteriorEtaj.position.set(1,1,2);
+    
     
     
    
@@ -100,8 +106,8 @@ function init() {
     const {light: light2,hemilight: hemilight2} = createLights();
     const {light: light3,hemilight: hemilight3} = createLights();
     const {light: light4,hemilight: hemilight4} = createLights();
-    sceneMateinfo.add(light1,hemilight1);
-    sceneAula.add(light2);
+    sceneMateinfo.add(light1);
+    sceneAula.add(light2,hemilight2);
     scenePescarie.add(light3);
     sceneCamin.add(light4);
 
@@ -133,14 +139,22 @@ function init() {
     controls2 = new OrbitControls(cameraAula, renderer.domElement);
     controls3 = new OrbitControls(cameraPescarie, renderer.domElement);
     controls4 = new OrbitControls(cameraCamin, renderer.domElement);
-    controls5 = new OrbitControls(cameraInterior, renderer.domElement);
+    controls5 = new OrbitControls(cameraInteriorParter, renderer.domElement);
+    controls6 = new OrbitControls(cameraInteriorEtaj,renderer.domElement);
     
     controls.enabled = false;
+    controls.maxPolarAngle = Math.PI / 2
+    controls.maxAzimuthAngle=0;
     controls2.enabled = false;
     controls3.enabled = false;
     controls4.enabled = false;
     controls5.enabled = false;
     controls5.autoRotate = true;
+    controls5.minPolarAngle = Math.PI * 0.5;
+		controls5.maxPolarAngle =  0;
+    controls6.enabled=false;
+    controls6.minPolarAngle=Math.PI*0.5;
+    controls6.maxPolarAngle=0;
 
     //controls.update() must be called after any manual changes to the camera's
     controls.update();
@@ -148,32 +162,34 @@ function init() {
     controls3.update();
     controls4.update();
     controls5.update();
+    controls6.update();
 
     const btnMateinfo = document.getElementById('button');
     const btnPescarie = document.getElementById('button3');
     const btnAula = document.getElementById('button2');
     const btnCamin = document.getElementById('button4');
-    const btnInt = document.getElementById('button5')
+    const btnIntParter = document.getElementById('button5');
+    const btnIntEtaj = document.getElementById('button6');
     const btnZoom = document.getElementById('btnZoom');
     const btnZOut = document.getElementById('btnZoomOut');
     const btnInfo = document.getElementById('infoButton');
 
-    btnInt.onclick = function clickHandler(){
+    btnIntParter.onclick = function clickHandler(){
     tloader.load(
-      '../../models/images/panorama.jpg',
+      '../../models/images/parter.jpg',
       texture => {
         const aspectRatio = texture.image.width / texture.image.height;
-        const geometry = new SphereGeometry(500,60,40 * aspectRatio);
+        const geometry = new SphereGeometry(500,60,40);
         geometry.scale(-1,1,1);
 
         const material = new MeshBasicMaterial({map: texture});
 
         const mesh = new Mesh(geometry, material);
-        sceneInterior.add(mesh);
+        sceneInteriorParter.add(mesh);
         objectsInScene5.push(mesh);
-        renderer.render(sceneInterior, cameraInterior);
-        currentScene = sceneInterior;
-        currentCamera = cameraInterior;
+        renderer.render(sceneInteriorParter, cameraInteriorParter);
+        currentScene = sceneInteriorParter;
+        currentCamera = cameraInteriorParter;
       },
       undefined,
       error => {
@@ -184,11 +200,46 @@ function init() {
     boolPescarie = false;
     boolAula = false;
     boolCamin = false;
-    boolInterior = true;  
+    boolInteriorEtaj = false;
+    boolInteriorParter = true; 
+    btnZoom.style.display ='none';
+        btnZOut.style.display= 'none';
+  }
+    btnIntEtaj.onclick = function clickHandler(){
+      tloader.load(
+        '../../models/images/etaj.jpg',
+        texture => {
+          const aspectRatio = texture.image.width / texture.image.height;
+          const geometry = new SphereGeometry(500,60,40);
+          geometry.scale(-1,1,1);
+  
+          const material = new MeshBasicMaterial({map: texture});
+  
+          const mesh = new Mesh(geometry, material);
+          sceneInteriorEtaj.add(mesh);
+          objectsInScene6.push(mesh);
+          renderer.render(sceneInteriorEtaj, cameraInteriorEtaj);
+          currentScene = sceneInteriorEtaj;
+          currentCamera = cameraInteriorEtaj;
+        },
+        undefined,
+        error => {
+          console.error('Eroare');
+        }
+      );
+    
+    boolMateinfo = false;
+    boolPescarie = false;
+    boolAula = false;
+    boolCamin = false;
+    boolInteriorEtaj = true;
+    boolInteriorParter = false; 
+    btnZoom.style.display ='none';
+        btnZOut.style.display= 'none'; 
   }
     btnMateinfo.onclick = function clickHandler(){
       
-        loader.load('../../models/mateinfo3.glb', function(gltf){
+        loader.load('../../models/mateinfotexturat.glb', function(gltf){
             modelMateinfo = gltf.scene;
             sceneMateinfo.add(modelMateinfo);
             modelMateinfo.name = "Sediu vechi Mate-Info"
@@ -206,7 +257,8 @@ function init() {
         boolPescarie = false;
         boolAula = false;
         boolCamin = false;
-        boolInterior = false;
+        boolInteriorParter = false;
+        boolInteriorEtaj = false;
 
         console.log('hello', boolMateinfo);
         btnZoom.style.display ='block';
@@ -219,6 +271,7 @@ function init() {
         modelAula = gltf.scene;
         modelAula.name = "Anexa Aula"
         sceneAula.add(modelAula);
+        modelAula.position.set(0,-10,10);
         objectsInScene2.push(modelAula);
         
         console.log('Model load success', modelAula);
@@ -233,7 +286,8 @@ function init() {
         boolPescarie=false;
         boolAula=true;
         boolCamin = false;
-        boolInterior = false;
+        boolInteriorEtaj = false;
+        boolInteriorParter = false; 
 
         btnZoom.style.display ='none';
         btnZOut.style.display= 'none';
@@ -263,7 +317,8 @@ function init() {
       boolAula = false;
       boolPescarie = true;
       boolCamin = false;
-      boolInterior = false;
+      boolInteriorEtaj = false;
+        boolInteriorParter = false; 
       btnZoom.style.display ='none';
       btnZOut.style.display= 'none';
     }
@@ -290,7 +345,8 @@ function init() {
       boolAula = false;
       boolPescarie = false;
       boolCamin = true;
-      boolInterior = false;
+      boolInteriorEtaj = false;
+      boolInteriorParter = false; 
       btnZoom.style.display ='none';
       btnZOut.style.display= 'none';
     }
@@ -374,7 +430,8 @@ function init() {
           renderer.render(sceneAula, cameraAula);
           renderer.render(scenePescarie, cameraPescarie);
           renderer.render(sceneCamin, cameraCamin)
-          renderer.render(sceneInterior,cameraInterior)
+          renderer.render(sceneInteriorParter,cameraInteriorParter)
+          renderer.render(sceneInteriorEtaj,cameraInteriorEtaj)
       } else {
           // Models are still loading, wait and check again
           setTimeout(checkDependenciesAndRender, 100);
@@ -418,6 +475,7 @@ function updateSidebarContent(objectInfo) {
   if(controls.enabled == true){
     const sidebar = document.getElementById('sidebar-right');
     sidebar.innerHTML = `<h2>Facultatea de Matematică și Informatică</h2>
+                         <p>Adresa: Bd. Mamaia, nr. 124</p>
                          <p>Facultatea de Matematică și Informatică (FMI) se adresează celor curioși, inteligenți,
                          pasionați de matematică și/sau informatică, ce își doresc să dezlege tainele software-ului, care
                          sunt atrași de rezolvarea problemelor de matematică și/sau de elaborarea algoritmilor, respectiv,
@@ -430,12 +488,14 @@ function updateSidebarContent(objectInfo) {
                          bună calitate în matematică și în informatică.
                          Inserția pe piața muncii a absolvenților FMI are procent ridicat, aceștia dobândind
                          competențele necesare pentru a se angaja la instituții/firme importante în domeniu.</p>
+                         <p>Sali: Sala P19, Sala E25, Sala E29 </p>
                          `;
     sidebar.style.display = 'block';
   }
   if(controls2.enabled == true){
     const sidebar = document.getElementById('sidebar-right');
     sidebar.innerHTML = `<h2>Anexă AULA</h2>
+                        <p>Adresa: Bd. Mamaia, nr. 124</p>
                          <p>Facultatea de Matematică și Informatică (FMI) se adresează celor curioși, inteligenți,
                          pasionați de matematică și/sau informatică, ce își doresc să dezlege tainele software-ului, care
                          sunt atrași de rezolvarea problemelor de matematică și/sau de elaborarea algoritmilor, respectiv,
@@ -448,20 +508,41 @@ function updateSidebarContent(objectInfo) {
                          bună calitate în matematică și în informatică.
                          Inserția pe piața muncii a absolvenților FMI are procent ridicat, aceștia dobândind
                          competențele necesare pentru a se angaja la instituții/firme importante în domeniu.</p>
+                         <p>Sali: Sala AB1, Sala AULA B, Sala CERP</p>
                          `;
     sidebar.style.display = 'block';
   }
   if(controls3.enabled == true){
     const sidebar = document.getElementById('sidebar-right');
     sidebar.innerHTML = `<h2>Căminele FN1 și FN2</h2>
-                         <p></p>
+                        <p>Adresa: aleea Studentilor nr. 1</p>
+                         <p>Caminul FN1 – 262 locuri</p>
+                         <p>Caminul FN2 – 460 locuri</p>
                          `;
     sidebar.style.display = 'block';
   }
   if(controls4.enabled == true){
     const sidebar = document.getElementById('sidebar-right');
     sidebar.innerHTML = `<h2>Căminele C1 și C2</h2>
-                         <p></p>
+                        <p>Adresa: Bd. Mamaia, nr. 124</p>
+                         <p>Caminul C1 – 268 locuri</p>
+                        <p>Caminul C2 – 337 locuri</p>
+                         `;
+    sidebar.style.display = 'block';
+  }
+  if(controls5.enabled == true){
+    const sidebar = document.getElementById('sidebar-right');
+    sidebar.innerHTML = `<h2>Parter Anexa AULA</h2>
+                        <p>Adresa: Bd. Mamaia, nr. 124</p>
+                         <p>Sali: Sala AB1</p>
+                         `;
+    sidebar.style.display = 'block';
+  }
+  if(controls6.enabled == true){
+    const sidebar = document.getElementById('sidebar-right');
+    sidebar.innerHTML = `<h2>Etaj Anexa AULA</h2>
+                        <p>Adresa: Bd. Mamaia, nr. 124</p>
+                         <p>Sali: Sala AULA B, Sala CERP</p>
                          `;
     sidebar.style.display = 'block';
   }
@@ -486,7 +567,8 @@ function animate() {
       controls2.enabled=boolAula;
       controls3.enabled = boolPescarie;
       controls4.enabled = boolCamin;
-      controls5.enabled = boolInterior;
+      controls5.enabled = boolInteriorParter;
+      controls6.enabled = boolInteriorEtaj;
         renderer.render(sceneMateinfo,cameraMateinfo);
         
         }
@@ -495,7 +577,8 @@ function animate() {
       controls2.enabled=boolAula;
       controls3.enabled = boolPescarie;
       controls4.enabled = boolCamin;
-      controls5.enabled = boolInterior
+      controls5.enabled = boolInteriorParter;
+      controls6.enabled = boolInteriorEtaj;
         renderer.render(sceneAula,cameraAula);
         
       }
@@ -506,7 +589,8 @@ function animate() {
       controls2.enabled=boolAula;
       controls3.enabled = boolPescarie;
       controls4.enabled = boolCamin;
-      controls5.enabled = boolInterior
+      controls5.enabled = boolInteriorParter;
+      controls6.enabled = boolInteriorEtaj;
     }
     if(boolCamin){
       renderer.render(sceneCamin,cameraCamin);
@@ -514,16 +598,28 @@ function animate() {
       controls2.enabled=boolAula;
       controls3.enabled = boolPescarie;
       controls4.enabled = boolCamin;
-      controls5.enabled = boolInterior
+      controls5.enabled = boolInteriorParter;
+      controls6.enabled = boolInteriorEtaj;
     }
 
-    if(boolInterior){
-      renderer.render(sceneInterior,cameraInterior);
+    if(boolInteriorParter){
+      renderer.render(sceneInteriorParter,cameraInteriorParter);
       controls.enabled=boolMateinfo;
       controls2.enabled=boolAula;
       controls3.enabled = boolPescarie;
       controls4.enabled = boolCamin;
-      controls5.enabled = true;
+      controls5.enabled = boolInteriorParter;
+      controls6.enabled = boolInteriorEtaj;
+    }
+
+    if(boolInteriorEtaj){
+      renderer.render(sceneInteriorEtaj,cameraInteriorEtaj);
+      controls.enabled=boolMateinfo;
+      controls2.enabled=boolAula;
+      controls3.enabled = boolPescarie;
+      controls4.enabled = boolCamin;
+      controls5.enabled = boolInteriorParter;
+      controls6.enabled = boolInteriorEtaj;
     }
     cameraMateinfo.aspect = window.innerWidth/window.innerHeight;
     cameraMateinfo.updateProjectionMatrix();
